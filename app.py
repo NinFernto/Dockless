@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from git import Repo, Git
 import subprocess
 import platform
 import psutil
@@ -8,17 +9,21 @@ import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Привет, это Flask!"
+# @app.route("/")
+# def test():
+#     run_detached('test.py')
+#     print(str(time.ctime()))
+#     time.sleep(5)
+#     kill_process_by_name('test.py')
+#     print(str(time.ctime()))
+#     return 'ok'
 
-@app.route("/api/test")
+@app.route("/")
 def test():
-    run_detached('test.py')
-    print(str(time.ctime()))
-    time.sleep(5)
-    kill_process_by_name('test.py')
-    print(str(time.ctime()))
+    repo_url = "https://github.com/NinFernto/MicroGitPyDocker.git"
+    namefolder = repo_url.split('/')[4].split('.git')[0]
+    os.makedirs(namefolder, exist_ok=True)
+    Repo.clone_from(repo_url, namefolder)
     return 'ok'
 
 @app.route("/api/hello")
