@@ -1,5 +1,10 @@
 from flask import Flask, jsonify, request
 import subprocess
+import platform
+import psutil
+import time
+import sys
+import os
 
 app = Flask(__name__)
 
@@ -7,14 +12,44 @@ app = Flask(__name__)
 def home():
     return "Привет, это Flask!"
 
+@app.route("/api/test")
+def test():
+    run_detached('test.py')
+    print(str(time.ctime()))
+    time.sleep(5)
+    kill_process_by_name('test.py')
+    print(str(time.ctime()))
+    return 'ok'
+
 @app.route("/api/hello")
 def hello():
     name = request.args.get("name", "мир")
     return jsonify(message=f"Привет, {name}!")
 
-# subprocess.Popen(
-#     ["python", "worker.py", "--mode", "auto"],
-# )
+def run_detached(script):
+    os.makedirs('logs', exist_ok=True)
+    name_script = "logs/" + script.split('.')[0]
+    system = platform.system()
+    log_file = open(f"{name_script}.log", "a", encoding="utf-8")
+    err_file = open(f"{name_script}_err.log", "a", encoding="utf-8")
+    subprocess.Popen(
+        [sys.executable, script],
+        creationflags=subprocess.CREATE_NO_WINDOW if system == "Windows" else 0,
+        stdout=log_file,
+        stderr=err_file,
+        bufsize=1,
+        text=True   
+    )
+
+def kill_process_by_name(script_name):
+    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            cmd = proc.info['cmdline']
+            if cmd and script_name in cmd:
+                print(f"Убиваем {script_name}, PID={proc.pid}")
+                proc.terminate()
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
 
 if __name__ == "__main__":
     app.run(debug=True)
