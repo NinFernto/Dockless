@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, abort, redirect, url_for, jsonify, request
 from git import Repo, Git
 import subprocess
 import platform
@@ -18,13 +18,17 @@ app = Flask(__name__)
 #     print(str(time.ctime()))
 #     return 'ok'
 
-@app.route("/")
+@app.route("/api/download")
 def test():
-    repo_url = "https://github.com/NinFernto/MicroGitPyDocker.git"
+    url = request.args.get('q')
+    if url == None:
+        return redirect('/')
+    #repo_url = "https://github.com/NinFernto/MicroGitPyDocker.git"
+    repo_url = url
     namefolder = repo_url.split('/')[4].split('.git')[0]
     os.makedirs(namefolder, exist_ok=True)
     Repo.clone_from(repo_url, namefolder)
-    return 'ok'
+    return redirect('/')
 
 @app.route("/api/hello")
 def hello():
