@@ -21,11 +21,6 @@ def test():
         Repo.clone_from(url, namefolder)
     return redirect('/')
 
-@app.route("/api/hello")
-def hello():
-    name = request.args.get("name", "мир")
-    return jsonify(message=f"Привет, {name}!")
-
 def run_detached(script):
     os.makedirs('logs', exist_ok=True)
     name_script = "logs/" + script.split('.')[0]
