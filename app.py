@@ -9,25 +9,16 @@ import os
 
 app = Flask(__name__)
 
-# @app.route("/")
-# def test():
-#     run_detached('test.py')
-#     print(str(time.ctime()))
-#     time.sleep(5)
-#     kill_process_by_name('test.py')
-#     print(str(time.ctime()))
-#     return 'ok'
-
+#Для теста http://localhost:5000/api/download?q=https://github.com/NinFernto/MicroGitPyDocker.git
+#http://localhost:5000/api/download?q=https://github.com/Flowseal/zapret-discord-youtube.git
 @app.route("/api/download")
 def test():
     url = request.args.get('q')
-    if url == None:
-        return redirect('/')
-    #repo_url = "https://github.com/NinFernto/MicroGitPyDocker.git"
-    repo_url = url
-    namefolder = repo_url.split('/')[4].split('.git')[0]
-    os.makedirs(namefolder, exist_ok=True)
-    Repo.clone_from(repo_url, namefolder)
+    if url != None:       
+        namefolder = url.split('/')[4].split('.git')[0]
+        namefolder = 'projects/' + namefolder
+        os.makedirs(namefolder, exist_ok=True)
+        Repo.clone_from(url, namefolder)
     return redirect('/')
 
 @app.route("/api/hello")
