@@ -30,7 +30,7 @@ pip install flask gitpython psutil
 Импортируемые модули в проекте:
 
 ```python
-from flask import Flask, abort, redirect, url_for, jsonify, request
+from flask import Flask, abort, redirect, url_for, jsonify, request, render_template
 from git import Repo, Git
 import subprocess
 import platform
