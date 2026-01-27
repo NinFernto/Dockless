@@ -1,6 +1,5 @@
 <div align="center">
-  <h1>Dockless</h1>
-  <br>
+  <h1><b>Dockless</b><br><br><i>“Run Python scripts without Docker. Almost.”</i></h1>
 </div>
 
 > [!CAUTION]
