@@ -1,4 +1,4 @@
-from flask import Flask, abort, redirect, url_for, jsonify, request, render_template
+from flask import Flask, flash, redirect, url_for, jsonify, request, render_template
 from git import Repo, Git
 import subprocess
 import platform
@@ -8,6 +8,7 @@ import sys
 import os
 
 app = Flask(__name__)
+app.secret_key = "dockless-secret-key"
 
 @app.route("/")
 def index():
@@ -17,13 +18,25 @@ def index():
 #http://localhost:5000/api/download?q=https://github.com/Flowseal/zapret-discord-youtube.git
 @app.route("/api/download")
 def test():
-    url = request.args.get('q')
-    if url != None:       
+    try:
+        url = request.args.get('q')
+        if not url:
+            flash("URL не указан", "warning")
+            return redirect("/")
+
         namefolder = url.split('/')[4].split('.git')[0]
         namefolder = 'projects/' + namefolder
         os.makedirs(namefolder, exist_ok=True)
+
         Repo.clone_from(url, namefolder)
-    return redirect('/')
+
+        flash("Репозиторий успешно загружен", "success")
+
+    except Exception as e:
+        flash(f"Ошибка загрузки репозитория", "danger")
+        print(e)  # для логов
+
+    return redirect("/")
 
 def run_detached(script):
     os.makedirs('logs', exist_ok=True)
