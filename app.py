@@ -1,4 +1,4 @@
-from flask import Flask, abort, redirect, url_for, jsonify, request
+from flask import Flask, abort, redirect, url_for, jsonify, request, render_template
 from git import Repo, Git
 import subprocess
 import platform
@@ -8,6 +8,10 @@ import sys
 import os
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template('index.html')
 
 #Для теста http://localhost:5000/api/download?q=https://github.com/NinFernto/MicroGitPyDocker.git
 #http://localhost:5000/api/download?q=https://github.com/Flowseal/zapret-discord-youtube.git
