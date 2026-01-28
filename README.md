@@ -1,6 +1,3 @@
-> [!CAUTION]
-> # **ПРОЕКТ ПОКА В РАБОТЕ И НЕ ВЫПОЛНЯЕТ ОСНОВНОЙ ФУНКЦИОНАЛ!**
-
 <div align="center">
   <img width="200" height="200" alt="logo_main" src="https://github.com/user-attachments/assets/e08abb10-9e76-4316-9a72-6c53f7f8b22c" />
   <h1><b>Dockless</b><br><br><i>“Run Python scripts without Docker. Almost.”</i></h1>
@@ -55,3 +52,9 @@ import time
 import sys
 import os
 ```
+
+## ❌ Что НЕ рекомендуется? 
+
+* Все внутренние проекты используют корневой путь решения. Запись напрямую в / ведёт к размещению данных в корневом каталоге Dockless и может привести к непредвиденным последствиям.
+
+
