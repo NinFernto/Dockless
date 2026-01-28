@@ -1,10 +1,9 @@
-from flask import Flask, flash, redirect, url_for, jsonify, request, render_template
-from git import Repo, Git
+from flask import Flask, flash, redirect, request, render_template
+from git import Repo
 import subprocess
 import platform
 import psutil
 import json
-import time
 import sys
 import os
 
