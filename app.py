@@ -58,7 +58,7 @@ def start(name):
 
 @app.route("/api/stop/<name>", methods = ['GET'])
 def stop(name):
-    kill_process_by_name('projects/' + name + '/' + getStartFile(name + '.json'))
+    kill_process_by_name(getStartFile(name + '.json'))
     setRunningStatus(name, False)
     return redirect('/')
 
@@ -73,13 +73,14 @@ def run_detached(script):
          open(f"{name_script}_err.log", "a", encoding="utf-8") as err_file:
         
         subprocess.Popen(
-            [sys.executable, script],
+            [sys.executable, urlsplit[2]],
             creationflags=subprocess.CREATE_NO_WINDOW if system == "Windows" else 0,
+            cwd=os.path.abspath(urlsplit[0] + "/" + urlsplit[1]),
             stdout=log_file,
             stderr=err_file,
             bufsize=1,
             text=True,
-            close_fds=True  # Windows можно оставить
+            close_fds=True
         )
 
 def getallprojects():
@@ -108,7 +109,7 @@ def kill_process_by_name(script_name):
 
 def killall():
     for project in getallprojects():
-        kill_process_by_name('projects/' + project['name'] + '/' + getStartFile(project['name'] + '.json'))
+        kill_process_by_name(getStartFile(project['name'] + '.json'))
         setRunningStatus(project['name'])
 
 def setRunningStatus(name, status=False):
@@ -146,9 +147,8 @@ def is_script_running(script_path):
 
 def check_status_all_running():
     for project in getallprojects():
-        setRunningStatus(project['name'], is_script_running('projects/'+project['name']+'/'+project['start_file']))
+        setRunningStatus(project['name'], is_script_running(project['start_file']))
 
 if __name__ == "__main__":
-    #Принудительное скидываение всех процессов
     killall()
     app.run()
