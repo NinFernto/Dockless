@@ -11,6 +11,8 @@ import os
 app = Flask(__name__)
 app.secret_key = "dockless-secret-key"
 
+os.makedirs('config', exist_ok=True)
+
 @app.route("/")
 def index():
     check_status_all_running()
@@ -150,4 +152,4 @@ def check_status_all_running():
 if __name__ == "__main__":
     #Принудительное скидываение всех процессов
     killall()
-    app.run(debug=True, use_reloader=False)
+    app.run()
